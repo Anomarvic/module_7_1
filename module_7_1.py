@@ -1,5 +1,5 @@
 class Product:
-    def __init__(self, name: str, weight: float, category: str):
+    def __init__(self, name, weight, category):
         self.name = name
         self.weight = weight
         self.category = category
@@ -7,29 +7,26 @@ class Product:
     def __str__(self):
         return f'{self.name}, {self.weight}, {self.category}'
 
-
 class Shop:
-    def __init__(self):
-        self.__file_name = 'products.txt'
+    def __init__(self, file_name='products.txt'):
+        self.__file_name = file_name
+        prod_db = open(self.__file_name, 'a')
+        prod_db.close()
 
     def get_products(self):
-        # with open(self.__file_name, 'r') as file:
-        #         return file.read()
-        file = open(self.__file_name, 'r+')
-        prod_str = file.read()
-        file.close()
-        return prod_str
+        prod_db = open(self.__file_name, 'r')
+        prod_all = prod_db.read()
+        prod_db.close()
+        return prod_all
 
     def add(self, *products):
-        existing_products = self.get_products().splitlines() if self.get_products() != "Файл не найден." else []
-        existing_names = [line.split(', ')[0] for line in existing_products]
-
+        prod_all = self.get_products()
         for product in products:
-            if product.name in existing_names:
+            if product.name in prod_all:
                 print(f'Продукт {product.name} уже есть в магазине')
             else:
-                with open(self.__file_name, 'a') as file:
-                    file.write(str(product) + '\n')
+                with open(self.__file_name, 'a') as prod_db:
+                    prod_db.write(str(product) + '\n')
 
 
 s1 = Shop()
